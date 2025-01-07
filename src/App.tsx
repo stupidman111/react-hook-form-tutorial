@@ -1,35 +1,90 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import { Switch } from "./components/ui/switch";
+import { formSchema } from "./schema";
 function App() {
-  const [count, setCount] = useState(0)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      gender: "",
+      phone: "",
+      isDefault: false,
+    },
+  });
 
+  const onSubmit = (data) => {
+    console.log(data);
+  };
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-1/3 px-4 pb-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/** name */}
+          <div className="space-y-2">
+            <label htmlFor="name">name</label>
+            <Input id="name" {...register("name")} placeholder="your name" />
+            {errors.name && <p>{errors.name.message}</p>}
+          </div>
+          {/** gender */}
+          <div className="space-y-2">
+            <label htmlFor="gender">gender</label>
+            <Select
+              onValueChange={(value) => setValue("gender", value)}
+              defaultValue={watch("gender")}
+            >
+              <SelectTrigger className="">
+                <SelectValue placeholder="select gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/** phone */}
+          <div className="space-y-2">
+            <label htmlFor="phone">phone</label>
+            <Input
+              id="phone"
+              placeholder="your phone number"
+              {...register("phone")}
+            />
+            {errors.phone && <p>{errors.phone.message}</p>}
+          </div>
+
+          {/** isDefault */}
+          <div className="space-y-2 space-x-4 flex items-center justify-between">
+            <label htmlFor="isDefault">isDefault</label>
+            <Switch
+              id="isDefault"
+              onCheckedChange={(checked) => setValue("isDefault", checked)}
+              checked={watch("isDefault")}
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <Button type="submit">Submit</Button>
+          </div>
+        </form>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
