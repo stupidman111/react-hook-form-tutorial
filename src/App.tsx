@@ -45,10 +45,14 @@ function App() {
           <div className="space-y-2">
             <label htmlFor="gender">gender</label>
             <Select
-              onValueChange={(value) => setValue("gender", value)}
+              onValueChange={(value) => {
+                if (value === "male" || value === "female") {
+                  setValue("gender", value);
+                }
+              }}
               defaultValue={watch("gender")}
             >
-              <SelectTrigger className="">
+              <SelectTrigger id="gender">
                 <SelectValue placeholder="select gender" />
               </SelectTrigger>
               <SelectContent>
