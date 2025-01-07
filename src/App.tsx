@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Switch } from "./components/ui/switch";
-import { formSchema } from "./schema";
+import { formSchema, FormType } from "./schema";
 function App() {
   const {
     register,
@@ -18,19 +18,19 @@ function App() {
     formState: { errors },
     setValue,
     watch,
-  } = useForm({
+  } = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      gender: "",
+      gender: "male",
       phone: "",
       isDefault: false,
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  function onSubmit(values: FormType) {
+    console.log(values);
+  }
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="w-1/3 px-4 pb-4">

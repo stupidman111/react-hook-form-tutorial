@@ -6,3 +6,5 @@ export const formSchema = z.object({
   phone: z.string().min(11, { message: "11 bit phone number" }),
   isDefault: z.boolean().default(false),
 });
+
+export type FormType = z.infer<typeof formSchema>;
